@@ -1,0 +1,370 @@
+/* 全局样式 */
+@import "./iconfont/material-icons.css";
+body {
+  display: grid;
+  row-gap: 8px;
+
+  padding: 8px;
+  box-sizing: border-box;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: "PingFangSC-regular";
+  background-color: rgba(10, 10, 10, 0.9);
+}
+
+/* 顶部添加任务集的bar */
+.add-task-bar {
+  height: 24px;
+  color: aliceblue;
+  text-align: right;
+  padding: 8px 0px;
+}
+.add-task-bar .add-taskset-btn {
+  padding: 8px 0px;
+  display: inline;
+}
+.add-task-bar span {
+  vertical-align: middle;
+  letter-spacing: 2px;
+}
+/* 顶部搜索栏 */
+.top-bar {
+  height: 102px;
+  width: 100%;
+  border-radius: 24px;
+  background-color: rgba(16, 128, 255, 100);
+}
+.toggle {
+  color: rgba(255, 255, 255, 100);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.toggle .active {
+  border-radius: 24px;
+  color: rgba(16, 128, 255, 100);
+  background-color: rgba(240, 240, 240, 0.8);
+}
+
+.toggle .toggle-item {
+  box-sizing: border-box;
+  height: 60px;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.4s;
+}
+.toggle .toggle-item p {
+  font-size: 42px;
+  margin-right: 4px;
+  display: inline;
+}
+
+.toggle .toggle-item span {
+  font-size: 16px;
+  text-align: right;
+}
+
+.input-bar {
+  display: block;
+}
+
+.input-bar input {
+  outline: none;
+  padding-left: 27px;
+  box-sizing: border-box;
+  border: none;
+  font-size: 16px;
+  line-height: 40px;
+
+  width: 100%;
+  border-radius: 24px;
+
+  color: rgba(0, 0, 0, 100);
+  background-color: rgba(255, 255, 255, 100);
+}
+.input-bar .date-selector {
+  display: none;
+}
+.input-bar .btn {
+  color: rgba(16, 128, 255, 100);
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+
+  float: right;
+  position: relative;
+  bottom: 34px;
+  left: -15px;
+}
+/* 顶部搜索栏结束 */
+/* 任务集列表 */
+.taskset-list {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  transition: 0.3s;
+}
+
+.taskset-item {
+  background-color: green;
+  overflow: visible;
+  margin: 0 auto;
+  width: 100px;
+  height: 150px;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+.taskset-item p {
+  color: rgba(255, 255, 255, 100);
+}
+.taskset-item span {
+  color: rgba(255, 255, 255, 100);
+}
+.taskset-item .top-icon {
+  margin: 0;
+  border-radius: 24px 0 0 0;
+  padding-left: 16px;
+  padding-top: 16px;
+  height: 24px;
+  width: 24px;
+}
+
+.taskset-item .taskset-name {
+  margin: 0;
+  padding-left: 18px;
+  width: 66px;
+  font-size: 14px;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+}
+
+.taskset-item .task-cnt {
+  display: inline;
+  margin: 0px;
+  padding-left: 16px;
+  line-height: 60px;
+  font-size: 42px;
+}
+.taskset-item .icon {
+  display: block;
+
+  margin-top: -6px;
+  margin-right: 16px;
+  text-align: end;
+}
+/*  TODO 搞一下选中的css  */
+.taskset-list .active {
+  background-color: rgb(20, 90, 20);
+  border-radius: 5px 24px 5px 24px;
+}
+/* 任务集列表结束 */
+/* 时间bar */
+.todo-container .time-bar {
+  margin-left: 0;
+  display: block;
+  width: 80%;
+  height: 32px;
+  border-radius: 5px;
+  background-color: rgba(64, 114, 170, 100);
+}
+.todo-container .time-bar span {
+  line-height: 32px;
+  display: inline-block;
+  color: white;
+  line-height: 32px;
+}
+.todo-container .time-bar .date {
+  letter-spacing: 1.5px;
+  margin-left: 7px;
+  font-size: 16px;
+}
+.todo-container .time-bar .left-day-cnt {
+  float: right;
+  margin-right: 6px;
+}
+.todo-container .time-bar .num {
+  font-size: 28px;
+}
+.todo-container .time-bar .text {
+  font-size: 14px;
+}
+/* 时间bar结束 */
+/* todo-list */
+.todo-container {
+  margin-top: 8px;
+  display: grid;
+  row-gap: 8px;
+  overflow: hidden;
+  /* transition: 0.2s; */
+}
+.todo-container .hide {
+  line-height: 0px;
+
+  display: none;
+}
+
+.todo-container .todo-item {
+  width: 90%;
+  margin: 0 auto;
+  position: relative;
+  height: auto;
+  border-radius: 10px;
+
+  background-color: rgba(32, 57, 85, 100);
+}
+
+.todo-container .todo-item .btn {
+  display: flex;
+  border-radius: 5px;
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+/* delete-btn */
+.todo-container .todo-item .delete-btn {
+  right: 0px;
+  background-color: red;
+}
+
+.todo-container .todo-item .delete-btn span {
+  font-size: 0px;
+  opacity: 0;
+  color: whitesmoke;
+}
+
+.todo-container .todo-item .change-task-btn-group {
+  display: flex;
+  border-radius: 5px;
+  position: absolute;
+  overflow: hidden;
+  height: 100%;
+  top: 0px;
+
+  width: 0px;
+}
+
+.todo-container .todo-item .change-task-btn-group > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.todo-container .todo-item .change-task-btn-group > div > span {
+  font-size: 32px;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-1 {
+  background-color: green;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-2 {
+  background-color: yellowgreen;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-3 {
+  background-color: orangered;
+}
+
+.todo-container .todo-item p {
+  vertical-align: middle;
+  margin-left: 10px;
+  width: 80%;
+  height: auto;
+  display: inline-block;
+  color: rgba(255, 255, 255, 100);
+  font-size: 14px;
+}
+.todo-container .todo-item .icon-container {
+  position: relative;
+
+  margin-left: 13px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.finish-icon {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 任务集合的颜色！ */
+  border: solid orange 2px;
+  border-radius: 25%;
+  background-color: white;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.finish-icon::after {
+  content: "";
+  margin-bottom: 5px;
+  display: block;
+  width: 16px;
+  height: 7px;
+  border: solid white 2px;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-50deg);
+}
+.todo-container .completed .finish-icon {
+  background-color: green;
+  border: none;
+}
+.todo-container .completed p {
+  color: grey;
+  text-decoration: line-through;
+}
+/* todo-list 结束 */
+/* 任务集合详情页 */
+
+.taskset-bar {
+  width: 100%;
+  height: 120px;
+  border-radius: 24px;
+  background-color: rgba(16, 128, 255, 100);
+}
+.taskset-bar .top-text {
+  color: aliceblue;
+  margin-left: 22px;
+  line-height: 48px;
+}
+.taskset-bar .top-text span {
+  vertical-align: middle;
+}
+.taskset-bar .top-text .taskset-name {
+  margin-left: 10px;
+}
+.add-task-btn {
+  text-align: center;
+  position: fixed;
+  bottom: 30px;
+  /* center */
+  left: 50%;
+  margin-left: -40%;
+  width: 80%;
+  height: 50px;
+  border-radius: 15px;
+  background-color: rgba(64, 114, 170, 100);
+}
+.add-task-btn span {
+  color: aliceblue;
+  vertical-align: middle;
+  line-height: 50px;
+}
+.add-task-btn .material-icons {
+  font-size: 32px;
+}
+.add-task-btn .btn-text {
+  letter-spacing: 2px;
+  font-weight: lighter;
+  margin-left: 10px;
+  font-size: 16px;
+}
+/* 任务集合详情页结束 */
