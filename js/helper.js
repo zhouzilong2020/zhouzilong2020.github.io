@@ -19,6 +19,18 @@ export function qa(selector, scope) {
 }
 
 /**
+ * removeEventListener wrapper
+ *
+ * @param {Element|Window} target Target Element
+ * @param {string} type Event name to bind to
+ * @param {Function} callback Event callback
+ * @param {boolean} [capture] Capture the event
+ */
+export function $noMore(target, type, callback, capture) {
+  target.removeEventListener(type, callback, !!capture);
+}
+
+/**
  * addEventListener wrapper
  *
  * @param {Element|Window} target Target Element

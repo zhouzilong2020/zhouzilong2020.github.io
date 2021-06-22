@@ -216,40 +216,18 @@ body {
   background-color: rgba(32, 57, 85, 100);
 }
 
-.todo-container .todo-item .btn {
-  display: flex;
-  border-radius: 5px;
-  position: absolute;
-  top: 0px;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
 /* delete-btn */
-.todo-container .todo-item .delete-btn {
-  right: 0px;
-  background-color: red;
-}
-
-.todo-container .todo-item .delete-btn span {
-  font-size: 0px;
-  opacity: 0;
-  color: whitesmoke;
-}
-
-.todo-container .todo-item .change-task-btn-group {
+.todo-container .todo-item .btn-group {
   display: flex;
-  border-radius: 5px;
-  position: absolute;
+  border-radius: 10px;
   overflow: hidden;
-  height: 100%;
+  position: absolute;
   top: 0px;
+  height: 100%;
 
   width: 0px;
 }
-
-.todo-container .todo-item .change-task-btn-group > div {
+.todo-container .todo-item .btn-group .btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,9 +235,18 @@ body {
   width: 100%;
 }
 
-.todo-container .todo-item .change-task-btn-group > div > span {
-  color: aliceblue;
-  font-size: 32px;
+.todo-container .todo-item .btn-group .btn span {
+  font-size: 24px;
+  opacity: 10;
+  color: whitesmoke;
+}
+
+.todo-container .todo-item .function-btn-group .delete-btn {
+  background-color: red;
+}
+
+.todo-container .todo-item .function-btn-group .edit-btn {
+  background-color: goldenrod;
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-1 {
