@@ -23,9 +23,6 @@ const _complete = (element) =>
   element.classList.contains("completed") ||
   element.parentNode.classList.contains("completed");
 
-const _dueTime = (element) =>
-  parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
-
 const _toggleId = (element) =>
   element.dataset.id ||
   element.parentNode.dataset.id ||
@@ -43,7 +40,9 @@ const _activeTasksetId = (eleList) => {
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
 
-
+const _hide = (element) =>
+  element.classList.contains("hide") ||
+  element.parentNode.classList.contains("hide");
 
 const rBtnExpandWidth = 80;
 const lBtnExpandWidth = 180;
@@ -64,6 +63,8 @@ export default class View {
     this.$todoContainer = qs(".todo-container");
     this.$tasksetList = qs(".taskset-list");
 
+    this.$functionBar = qs(".function-bar");
+
     this.$lastScrollCtx = null;
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
@@ -74,21 +75,47 @@ export default class View {
     this.extraWidthForSecondScroll = 0;
   }
 
+  changeHideBtn(hide) {
+    const hideBtnIcon = this.$functionBar.querySelector(".hide-btn span");
+    const hideBtn = this.$functionBar.querySelector(".hide-btn");
+    if (!hide) {
+      hideBtn.classList.remove("hide");
+      hideBtnIcon.innerText = "expand_less";
+    } else {
+      hideBtn.classList.add("hide");
+      hideBtnIcon.innerText = "expand_more";
+    }
+  }
+
+  bindToggleAllHide(handler) {
+    $delegate(
+      this.$functionBar,
+      [".function-bar .hide-btn", ".function-bar .hide-btn span"],
+      "click",
+      ({ target }) => {
+        // 与上一个状态取反
+        // console.log(target);
+        // console.log(_hide(target));
+        handler(!_hide(target));
+      },
+      true
+    );
+  }
+
+  bindDeleteAllComplete(handler) {
+    $delegate(
+      this.$functionBar,
+      [".function-bar .delete-btn", ".function-bar .delete-btn span"],
+      "click",
+      ({ target }) => {
+        handler();
+      },
+      true
+    );
+  }
+
   // 初始化绑定操作
   init() {
-    this.bindToggleTimebar((leftDay) => {
-      const todoList = this.$todoContainer.querySelectorAll(".todo-item");
-      const changeVisibilityIdList = [];
-      for (var i = 0, len = todoList.length; i < len; i++) {
-        var itemLeftDay = _dueTime(todoList[i]);
-        if (leftDay === itemLeftDay) {
-          // 将该item的display 设置为none
-          changeVisibilityIdList.push(todoList[i]);
-        }
-      }
-      this.setTodoItemVisibility(changeVisibilityIdList);
-    });
-
     this.bindTouchStart((id, startX) => {
       if (!!this.$lastScrollCtx) {
         this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
@@ -407,7 +434,6 @@ export default class View {
       [".time-bar", ".time-bar span", ".time-bar div"],
       "click",
       ({ target }) => {
-        console.log(target);
         handler(_itemId(target));
       },
       true,
@@ -452,22 +478,6 @@ export default class View {
   }
 
   /**
-   * 将剩余日期等于这个数值的全部隐藏
-   *
-   * @param {HTMLElement} eleList
-   */
-  setTodoItemVisibility(eleList) {
-    let i = eleList.length;
-    while (i--) {
-      if (eleList[i].classList.contains("hide")) {
-        eleList[i].classList.remove("hide");
-      } else {
-        eleList[i].classList.add("hide");
-      }
-    }
-  }
-
-  /**
    * toggle task的完成状态
    *
    * @param {!number} id Item ID
@@ -505,9 +515,12 @@ export default class View {
     //  2. 未完成优先
     //  3. 后添加的优先
 
+    //  1. due 少的优先
     todoList.sort((a, b) => {
       return a.due.LeftDay() - b.due.LeftDay();
     });
+    //  TODO 2.未完成的优先
+    //  TODO 3. 后添加的优先
 
     todoList.reduce(
       (pre, cur) => {

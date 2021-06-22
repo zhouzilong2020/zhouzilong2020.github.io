@@ -191,6 +191,7 @@ body {
   font-size: 14px;
 }
 /* 时间bar结束 */
+
 /* todo-list */
 .todo-container {
   margin-top: 8px;
@@ -257,6 +258,7 @@ body {
 }
 
 .todo-container .todo-item .change-task-btn-group > div > span {
+  color: aliceblue;
   font-size: 32px;
 }
 
@@ -368,3 +370,26 @@ body {
   font-size: 16px;
 }
 /* 任务集合详情页结束 */
+
+/* function bar */
+.function-bar {
+  position: relative;
+  height: 24px;
+  color: white;
+}
+.function-bar .btn {
+  padding: 0 8px;
+}
+.function-bar .btn:nth-child(1) {
+  display: flex;
+  float: left;
+}
+.function-bar .btn:nth-child(2) {
+  display: flex;
+  float: right;
+}
+
+.function-bar .btn .text {
+  vertical-align: center;
+  margin-left: 5px;
+}

@@ -42,7 +42,7 @@ export default class Template {
     return `<div data-id="${
       todo.id
     }"  data-due="${todo.due.LeftDay()}" class="todo-item ${
-      todo.completed ? " completed" : ""
+      (!!todo.completed ? " completed" : "") + (!!todo.hide ? " hide" : "")
     }">
   <div class="icon-container"><div class="finish-icon"></div></div>
   <p>${todo.mes}</p>

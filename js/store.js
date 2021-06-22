@@ -129,10 +129,10 @@ export default class Store {
     });
 
     let i = result.length;
+    // 反序列化
     while (i--) {
       result[i].due = new Date(result[i].due);
     }
-    // 反序列化
     callback(result);
   }
 
@@ -151,7 +151,7 @@ export default class Store {
     let i = tasksetList.length;
     let k;
 
-    //console.log(update);
+    // console.log(update);
 
     while (i--) {
       const todoList = tasksetList[i].todoList;
@@ -167,7 +167,6 @@ export default class Store {
           }
           // 更新字段
           for (k in update) {
-            // //console.log("updated");
             toBeUpdated[k] = update[k];
           }
           updated = true;

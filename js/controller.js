@@ -2,6 +2,9 @@ import View from "./view.js";
 import Store from "./store.js";
 import { emptyItemQuery } from "./item.js";
 
+const _dueTime = (element) =>
+  parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
+
 export default class Controller {
   /**
    * @param  {!Store} store A Store instance
@@ -14,30 +17,92 @@ export default class Controller {
     this.view.bindToggleItemComplete(this.toggleItemCompleted.bind(this));
     this.view.bindAddNewTodo(this.addItem.bind(this));
     this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
-
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
     this.view.bindDeleteItem(this.deleteItem.bind(this));
     this.view.bindChangeItemTaskset(this.changeItemTaskset.bind(this));
-    // TODO 修改这个
-    // this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
-    
+    this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
+    this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
+    this.view.bindToggleAllHide(this.toggleAllHide.bind(this));
+
     this.curToggleState = "";
   }
 
-  toggleItemHide(leftDay){
-    this.store.find({due}) 
-    const todoList = this.$todoContainer.querySelectorAll(".todo-item");
-      const changeVisibilityIdList = [];
-      for (var i = 0, len = todoList.length; i < len; i++) {
-        var itemLeftDay = _dueTime(todoList[i]);
-        if (leftDay === itemLeftDay) {
-          // 将该item的display 设置为none
-          changeVisibilityIdList.push(todoList[i]);
-        }
+  /**
+   * 收起/展开所有item
+   * @param {boolean} hide
+   */
+  toggleAllHide(hide) {
+    this.view.changeHideBtn(hide);
+    const state = this.curToggleState;
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      (todoList) => {
+        const updateList = todoList.reduce((pre, cur) => {
+          pre.push({
+            id: cur.id,
+            hide,
+          });
+          return pre;
+        }, []);
+        
+        let samephore = updateList.length;
+        updateList.forEach((cur) => {
+          this.store.update(cur, () => {
+            samephore--;
+            if (samephore === 0) {
+              this.view.clearScroll();
+              this._filter();
+            }
+          });
+        });
       }
-      this.setTodoItemVisibility(changeVisibilityIdList);
+    );
   }
 
+  deleteAllComplete() {
+    this.store.remove({ completed: true }, () => {
+      this._filter();
+    });
+  }
+
+  toggleItemHide(leftDay) {
+    const state = this.curToggleState;
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      (todoList) => {
+        const updateList = todoList.reduce((pre, cur) => {
+          if (cur.due.LeftDay() === leftDay) {
+            pre.push({
+              id: cur.id,
+              hide: !!!cur.hide,
+            });
+          }
+          return pre;
+        }, []);
+        // console.log(updateList)
+        let samephore = updateList.length;
+        updateList.forEach((cur) => {
+          this.store.update(cur, () => {
+            samephore--;
+            if (samephore === 0) {
+              this.view.clearScroll();
+              this._filter();
+            }
+          });
+        });
+      }
+    );
+  }
 
   init() {
     this.view.init();
@@ -48,7 +113,7 @@ export default class Controller {
   changeItemTaskset(id, tasksetId) {
     this.store.update({ id, tasksetId }, () => {
       this.view.clearScroll();
-      this._filter(true);
+      this._filter();
     });
   }
 
@@ -119,19 +184,6 @@ export default class Controller {
    * @param {!boolean} completed
    */
   toggleItemCompleted(id, completed) {
-    this.store.update({ id, completed }, () => {
-      this.view.clearScroll();
-      this._filter();
-    });
-  }
-
-  /**
-   * 更新item的完成情况
-   *
-   * @param {!number} id
-   * @param {!boolean} hide
-   */
-  toggleItemHide(id, hide) {
     this.store.update({ id, completed }, () => {
       this.view.clearScroll();
       this._filter();
