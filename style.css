@@ -2,9 +2,10 @@
 @import "./iconfont/material-icons.css";
 body {
   display: grid;
-  row-gap: 8px;
-  grid-row-gap: 8px;
+  /* row-gap: 8px; */
+  /* grid-row-gap: 8px; */
 
+  
   padding: 8px;
   box-sizing: border-box;
   max-width: 600px;
@@ -100,6 +101,7 @@ body {
 /* 顶部搜索栏结束 */
 /* 任务集列表 */
 .taskset-list {
+  margin-top: 10px;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
