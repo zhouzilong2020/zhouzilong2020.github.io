@@ -3,6 +3,7 @@
 body {
   display: grid;
   row-gap: 8px;
+  grid-row-gap: 8px;
 
   padding: 8px;
   box-sizing: border-box;
