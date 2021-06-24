@@ -153,13 +153,16 @@ export default class View {
     });
 
     $on(this.$floatGadget, "touchmove", () => {
+      qs("body").style.overflow = "hidden";
       event.preventDefault();
+      event.stopPropagation();
       const offset = -30;
       this.$floatGadget.style.left = _clientX(event) + offset + "px";
       this.$floatGadget.style.top = _clientY(event) + offset + "px";
     });
 
     $on(this.$floatGadget, "touchend", () => {
+      qs("body").style.overflow = "";
       const offset = -30;
       this.setFloatPosition(
         _clientX(event) + offset,
@@ -485,6 +488,7 @@ export default class View {
       [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
       "touchmove",
       ({ target }) => {
+        qs("body").style.overflow = "hidden";
         handler(_clientX(event));
       },
       true,
@@ -503,6 +507,7 @@ export default class View {
       [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
       "touchend",
       ({ target }) => {
+        qs("body").style.overflow = "";
         handler(_clientX(event));
       },
       true,
