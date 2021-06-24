@@ -175,10 +175,6 @@ export default class View {
     });
 
     $on(this.$floatGadget, "touchend", () => {
-      if (this.$floatGadget.classList.contains("expand")) {
-        //  展开后移除默认
-        return;
-      }
       qs("body").style.overflow = "";
       const offset = -30;
       this.setFloatPosition(
