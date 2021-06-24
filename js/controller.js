@@ -33,7 +33,6 @@ export default class Controller {
    * 完成当前列表下的所有task
    */
   completeAll() {
-    alert("completeAll!!!");
     const state = this.curToggleState;
     this.store.find(
       {
