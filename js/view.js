@@ -92,10 +92,18 @@ export default class View {
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
     this.extraWidthForSecondScroll = 0;
+
+    this.date = null;
   }
 
   // 初始化绑定操作
   init() {
+    qs(".date-input").min = new Date().Format("yyyy-MM-dd");
+    $on(qs(".date-input"), "change", () => {
+      this.date = qs(".date-input").value;
+      qs(".add-btn").click();
+    });
+
     this.bindTouchStart((id, startX) => {
       if (!!this.$lastScrollCtx) {
         this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
@@ -568,6 +576,7 @@ export default class View {
     const eventHandler = (event) => {
       if (event.code === "Enter" || event.type === "click") {
         const mes = this.$input.value;
+        const due = this.date;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
         if (
@@ -581,7 +590,7 @@ export default class View {
           );
           return;
         } else if (curTaskset.length === 1) {
-          handler(mes, curTaskset[0]);
+          handler(mes, curTaskset[0], due);
         }
       }
     };
@@ -722,29 +731,48 @@ export default class View {
   renderItem(todoList) {
     // TODO 增量式更新
     this.$todoContainer.innerHTML = "";
-    // TODO 按照不同顺序排列
-    // TODO 按照优先级排列
+    
     // 排序规则
     //  1. due 少的优先
     //  2. 未完成优先
     //  3. 后添加的优先
 
-    //  1. due 少的优先
+    //  3.后添加的优先
+    todoList.sort((a, b) => {
+      return a.id - b.due;
+    });
+    //  2. due 少的优先
     todoList.sort((a, b) => {
       return a.due.LeftDay() - b.due.LeftDay();
     });
-    //  TODO 2.未完成的优先
-    //  TODO 3. 后添加的优先
+
+    let done = [];
+    let todo = [];
 
     todoList.reduce(
       (pre, cur) => {
-        if (pre.due.getDate() !== cur.due.getDate()) {
+        if (pre.due.getTime() !== cur.due.getTime()) {
+          todo.forEach((a) => {
+            this.$todoContainer.innerHTML += this.template.Todo(a);
+          });
+          done.forEach((a) => {
+            this.$todoContainer.innerHTML += this.template.Todo(a);
+          });
+          // 清空
+          done = [];
+          todo = [];
+
           this.$todoContainer.innerHTML += this.template.TimeBar(
             cur.due,
             cur.completed
           );
         }
-        this.$todoContainer.innerHTML += this.template.Todo(cur);
+        // due一样，进入tempList
+        if (cur.completed) {
+          done.push(cur);
+        } else {
+          todo.push(cur);
+        }
         return cur;
       },
       { due: new Date(0) }

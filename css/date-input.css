@@ -1,0 +1,26 @@
+@import "./variable.css";
+input[type="date"] {
+  padding: 0;
+  margin: 0;
+  outline: none;
+  opacity: 0;
+  color: aliceblue;
+  border: none;
+}
+input[type="date"]::-webkit-datetime-edit {
+  display: none;
+}
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  border: none;
+  color: white;
+  margin: 0px;
+  font-size: 24px;
+  background-image: none;
+}

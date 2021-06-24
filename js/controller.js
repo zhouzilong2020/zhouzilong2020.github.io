@@ -201,8 +201,16 @@ export default class Controller {
    * @param {!Date} due todo的截止日期
    */
   addItem(mes, tasksetId, due) {
+    console.log(due);
     if (!!!due) {
-      due = new Date(Date.now() - Math.random() * 100100000);
+      due = new Date(Date.now() + Math.random() * 9900100000);
+    } else {
+      let date = due.split("-");
+      due = new Date(
+        parseInt(date[0], 10),
+        parseInt(date[1], 10) - 1,
+        parseInt(date[2], 10)
+      );
     }
     this.store.insert(
       {
