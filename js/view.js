@@ -153,6 +153,7 @@ export default class View {
     });
 
     $on(this.$floatGadget, "touchmove", () => {
+      event.preventDefault();
       const offset = -30;
       this.$floatGadget.style.left = _clientX(event) + offset + "px";
       this.$floatGadget.style.top = _clientY(event) + offset + "px";
