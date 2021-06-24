@@ -137,13 +137,15 @@ export default class View {
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
     this.bindMaskClick(() => {
-      this.collapseFloatGadget.call(this);
-      this.setFloatPosition(
-        this.startX,
-        this.startY,
-        _screenH(event),
-        _screenW(event)
-      );
+      if (this.$floatGadget.classList.contains("expand")) {
+        this.collapseFloatGadget.call(this);
+        this.setFloatPosition(
+          this.startX,
+          this.startY,
+          _screenH(event),
+          _screenW(event)
+        );
+      }
     });
 
     $on(this.$floatGadget, "touchstart", () => {
@@ -308,12 +310,10 @@ export default class View {
           this.$floatGadget.style.transition = "0s";
         }, 200);
       }, 400);
-      
     } else {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
-
   }
 
   /**

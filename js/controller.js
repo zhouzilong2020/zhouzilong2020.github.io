@@ -73,6 +73,7 @@ export default class Controller {
    * @param {boolean} hide
    */
   toggleAllHide(hide) {
+    event.preventDefault()
     this.view.changeHideBtn(hide);
     const state = this.curToggleState;
     this.store.find(
