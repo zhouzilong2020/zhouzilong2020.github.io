@@ -222,7 +222,7 @@ export default class View {
       ({ target }) => {
         handler();
       },
-      true
+      false
     );
   }
 
@@ -264,7 +264,7 @@ export default class View {
       ({ target }) => {
         handler();
       },
-      true
+      false
     );
   }
 
@@ -321,7 +321,6 @@ export default class View {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
-    
   }
 
   /**
