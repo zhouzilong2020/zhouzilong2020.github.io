@@ -73,7 +73,6 @@ export function $delegate(target, selector, type, handler, capture, verbose) {
       }
     }
   };
-
   $on(target, type, dispatchEvent, !!capture);
 }
 

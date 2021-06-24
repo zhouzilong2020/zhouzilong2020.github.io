@@ -136,6 +136,7 @@ export default class View {
     });
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
+
     this.bindMaskClick(() => {
       if (this.$floatGadget.classList.contains("expand")) {
         this.collapseFloatGadget.call(this);
@@ -301,10 +302,11 @@ export default class View {
    * 隐藏、现实float gadget
    */
   toggleFloatGadget() {
+    alert("toggle!!!");
+
     const offset = -30;
     this.startX = event.clientX + offset;
     this.startY = event.clientY + offset;
-
     if (!this.$floatGadget.classList.contains("expand")) {
       this.setMask("2px");
       this.$floatGadget.style.transition = "0.3s";
@@ -562,7 +564,7 @@ export default class View {
    */
   bindAddNewTodo(handler, verbose) {
     const eventHandler = (event) => {
-      if (event.code == "Enter") {
+      if (event.code === "Enter" || event.type === "click") {
         const mes = this.$input.value;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
@@ -581,7 +583,7 @@ export default class View {
         }
       }
     };
-    $on(this.$inputBar.querySelector("span"), "click", eventHandler, true);
+    $on(this.$inputBar.querySelector(".add-btn"), "click", eventHandler, true);
     $on(this.$input, "keyup", eventHandler, true);
   }
 
@@ -632,6 +634,7 @@ export default class View {
       !!verbose
     );
   }
+
   /**
    * 绑定toggle 时间轴，隐藏或者展示中间的task
    * @param {function} handler handle function

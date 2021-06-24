@@ -33,6 +33,7 @@ export default class Controller {
    * 完成当前列表下的所有task
    */
   completeAll() {
+    alert("completeAll!!!");
     const state = this.curToggleState;
     this.store.find(
       {
@@ -43,7 +44,6 @@ export default class Controller {
       }[state],
       (todoList) => {
         let len = todoList.length;
-        console.log("asdasdasdasd")
         todoList.forEach((todo) => {
           this.store.update(
             {
