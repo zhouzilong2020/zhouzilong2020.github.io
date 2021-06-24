@@ -47,7 +47,7 @@ export const emptyItemQuery = Empty.Record;
 export var ItemQuery;
 
 /**
- * @typedef {!({id: number, mes: string}|{id: number, completed: boolean}|{id: number, hide: boolean}|{id: number, task: boolean})}
+ * @typedef {!({id: number, mes: string}|{id: number, completed: boolean}|{id: number, hide: boolean}|{id: number, tasksetId: boolean})}
  */
 export var ItemUpdate;
 

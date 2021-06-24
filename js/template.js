@@ -3,15 +3,19 @@ export default class Template {
   /**
    * add a new day bar to the list
    * @param {Date} dueDay
+   * @param {boolean} completed
    * @returns
    */
-  TimeBar(dueDay) {
-    return `<div class="time-bar"  data-id="${dueDay.LeftDay()}">
+  TimeBar(dueDay, completed) {
+    const leftDay = dueDay.LeftDay();
+    return `<div class="time-bar ${
+      leftDay <= 0 && !!!completed ? "over-due" : " "
+    }"  data-id="${leftDay}" class="">
           <span class="date">${dueDay.Format(
             "yyyy/MM/dd"
           )} ${dueDay.GetDay()}</span>
           <div class="left-day-cnt">
-            <span class="num">${dueDay.LeftDay()}</span>
+            <span class="num">${leftDay}</span>
             <span class="text">d left</span>
           </div>
         </div>`;
@@ -39,15 +43,14 @@ export default class Template {
    * @returns
    */
   Todo(todo) {
-    return `<div data-id="${
-      todo.id
-    }"  data-due="${todo.due.LeftDay()}" class="todo-item ${
+    return `<div data-id="${todo.id}"  data-due="${todo.due.LeftDay()}"  
+    class="todo-item ${
       (!!todo.completed ? " completed" : "") + (!!todo.hide ? " hide" : "")
     }">
-  <div class="icon-container"><div class="finish-icon"></div></div>
+  <div class="icon-container ${
+    "taskset-" + todo.tasksetId
+  }"><div class="finish-icon"></div></div>
   <p>${todo.mes}</p>
-  
-
   <div class="function-btn-group btn-group">
     <div class="edit-btn btn">
       <span class="material-icons" >edit</span>
@@ -55,11 +58,7 @@ export default class Template {
     <div class="delete-btn btn">
         <span class="material-icons" >delete</span>
     </div>
-
-    
   </div>
-
-
   <div class="change-task-btn-group btn-group">
     <div data-tasksetId="1" class=" btn btn-1">
       <span class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_very_satisfied</span>

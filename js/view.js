@@ -40,6 +40,9 @@ const _activeTasksetId = (eleList) => {
   return result;
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
+const _clientY = (event) => event.changedTouches[0].clientY;
+const _screenH = (event) => event.view.outerHeight;
+const _screenW = (event) => event.view.outerWidth;
 
 const _hide = (element) =>
   element.classList.contains("hide") ||
@@ -75,61 +78,20 @@ export default class View {
 
     this.$functionBar = qs(".function-bar");
 
+    // 判断当前是否已经添加了mask listener
+    this.isMaskActive = false;
+    this.$floatGadget = qs(".float-gadget");
+    this.$mask = qs(".mask");
+
     this.$lastScrollCtx = null;
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
     this.startX = 0;
+    this.startY = 0;
 
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
     this.extraWidthForSecondScroll = 0;
-  }
-
-  changeHideBtn(hide) {
-    const hideBtnIcon = this.$functionBar.querySelector(".hide-btn span");
-    const hideBtn = this.$functionBar.querySelector(".hide-btn");
-    if (!hide) {
-      hideBtn.classList.remove("hide");
-      hideBtnIcon.innerText = "expand_more";
-    } else {
-      hideBtn.classList.add("hide");
-      hideBtnIcon.innerText = "expand_less";
-    }
-  }
-
-  
-  editItem(curText, handler) {
-    const newText = prompt("please change your task here", curText);
-    handler(newText);
-  }
-
-  enableDeleteOnAdd() {}
-
-  enableDeleteOnAdd() {}
-
-  bindToggleAllHide(handler) {
-    $delegate(
-      this.$functionBar,
-      [".function-bar .hide-btn", ".function-bar .hide-btn span"],
-      "click",
-      ({ target }) => {
-        // 与上一个状态取反
-        handler(!_hide(target));
-      },
-      true
-    );
-  }
-
-  bindDeleteAllComplete(handler) {
-    $delegate(
-      this.$functionBar,
-      [".function-bar .delete-btn", ".function-bar .delete-btn span"],
-      "click",
-      ({ target }) => {
-        handler();
-      },
-      true
-    );
   }
 
   // 初始化绑定操作
@@ -172,6 +134,194 @@ export default class View {
       }
       this.setContent(diffX);
     });
+
+    this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
+    this.bindMaskClick(() => {
+      this.collapseFloatGadget.call(this);
+      this.setFloatPosition(
+        this.startX,
+        this.startY,
+        _screenH(event),
+        _screenW(event)
+      );
+    });
+
+    $on(this.$floatGadget, "touchstart", () => {
+      this.$floatGadget.style.transition = "0s";
+    });
+
+    $on(this.$floatGadget, "touchmove", () => {
+      const offset = -25;
+      this.$floatGadget.style.left = _clientX(event) + offset + "px";
+      this.$floatGadget.style.top = _clientY(event) + offset + "px";
+    });
+
+    $on(this.$floatGadget, "touchend", () => {
+      const offset = -25;
+      this.setFloatPosition(
+        _clientX(event) + offset,
+        _clientY(event) + offset,
+        _screenH(event),
+        _screenW(event)
+      );
+    });
+  }
+
+  setFloatPosition(curX, curY, screenH, screenW) {
+    this.$floatGadget.style.transition = "0.4s";
+
+    const offset = -25;
+    const pos = {
+      left: [0, curY],
+      top: [curX, 0],
+      bottom: [curX, screenH + 2 * offset],
+      right: [screenW + 2 * offset, curY],
+    };
+
+    const diffX = Math.min(curX, screenW - curX);
+    const diffY = Math.min(curY, screenH - curY);
+
+    if (diffX < diffY) {
+      if (curX / screenW < 0.5) {
+        this.setPos(this.$floatGadget, pos["left"]);
+      } else {
+        this.setPos(this.$floatGadget, pos["right"]);
+      }
+    } else {
+      if (curY / screenH > 0.5) {
+        this.setPos(this.$floatGadget, pos["bottom"]);
+      } else {
+        this.setPos(this.$floatGadget, pos["top"]);
+      }
+    }
+
+    setTimeout(() => {
+      this.$floatGadget.style.transition = "0s";
+    }, 400);
+  }
+
+  setPos(ele, pos) {
+    ele.style.left = pos[0] + "px";
+    ele.style.top = pos[1] + "px";
+  }
+
+  bindCompleteAll(handler) {
+    $delegate(
+      this.$floatGadget,
+      [".btn-complete-all", ".btn-complete-all span"],
+      "click",
+      ({ target }) => {
+        handler();
+      },
+      true
+    );
+  }
+
+  changeHideBtn(hide) {
+    const hideBtnIcon = this.$functionBar.querySelector(".hide-btn span");
+    const hideBtn = this.$functionBar.querySelector(".hide-btn");
+    if (!hide) {
+      hideBtn.classList.remove("hide");
+      hideBtnIcon.innerText = "expand_more";
+    } else {
+      hideBtn.classList.add("hide");
+      hideBtnIcon.innerText = "expand_less";
+    }
+  }
+
+  editItem(curText, handler) {
+    const newText = prompt("please change your task here", curText);
+    handler(newText);
+  }
+
+  bindToggleAllHide(handler) {
+    $delegate(
+      this.$functionBar,
+      [".function-bar .hide-btn", ".function-bar .hide-btn span"],
+      "click",
+      ({ target }) => {
+        // 与上一个状态取反
+        handler(!_hide(target));
+      },
+      true
+    );
+  }
+
+  bindDeleteAllComplete(handler) {
+    $delegate(
+      this.$floatGadget,
+      [".btn-delete-all", ".btn-delete-all span"],
+      "click",
+      ({ target }) => {
+        handler();
+      },
+      true
+    );
+  }
+
+  /**
+   * 设置全局blur效果
+   * @param {string}} size
+   */
+  setMask(size) {
+    this.$mask.style.filter = `blur(${size})`;
+  }
+
+  /**
+   * mask 只能用于关掉float gadget
+   */
+  bindMaskClick(handler) {
+    $on(this.$mask, "click", handler, true);
+  }
+
+  /**
+   * 折叠float gadget
+   */
+  collapseFloatGadget() {
+    if (this.$floatGadget.classList.contains("expand")) {
+      this.$floatGadget.style.transition = "0.2s";
+      this.setMask("0");
+      this.$floatGadget.classList.remove("expand");
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0";
+      }, 400);
+    }
+  }
+
+  /**
+   * 隐藏、现实float gadget
+   */
+  toggleFloatGadget() {
+    const offset = -25;
+    this.startX = event.clientX + offset;
+    this.startY = event.clientY + offset;
+
+    if (!this.$floatGadget.classList.contains("expand")) {
+      this.setMask("2px");
+      this.$floatGadget.style.transition = "0.4s";
+      this.$floatGadget.style.top = "50%";
+      this.$floatGadget.style.left = "50%";
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0.2s";
+        this.$floatGadget.classList.add("expand");
+        setTimeout(() => {
+          this.$floatGadget.style.transition = "0s";
+        }, 200);
+      }, 400);
+      
+    } else {
+      this.setMask("0");
+      this.$floatGadget.classList.remove("expand");
+    }
+
+  }
+
+  /**
+   * 绑定toggle gadget 事件
+   * @param {function}} handler
+   */
+  bindToggleFloatGadget(handler) {
+    $on(this.$floatGadget, "click", handler, true);
   }
 
   /**
@@ -575,7 +725,10 @@ export default class View {
     todoList.reduce(
       (pre, cur) => {
         if (pre.due.getDate() !== cur.due.getDate()) {
-          this.$todoContainer.innerHTML += this.template.TimeBar(cur.due);
+          this.$todoContainer.innerHTML += this.template.TimeBar(
+            cur.due,
+            cur.completed
+          );
         }
         this.$todoContainer.innerHTML += this.template.Todo(cur);
         return cur;

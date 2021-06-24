@@ -6,51 +6,67 @@
     <meta name="viewport" content="width=375px, initial-scale=1.0" />
 
     <title>Todo-MVC</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
     <script type="module" src="./js/app.js"></script>
   </head>
   <body>
-    <!-- 首页toggle -->
-    <div class="top-bar">
-      <div class="toggle">
-        <div class="toggle-item" data-id="left">
-          <p class="toggle-left">0</p>
-          <span> left</span>
+    <div class="float-gadget">
+      <div class="btn-group">
+        <div class="btn btn-complete-all">
+          <span class="material-icons">done_all</span>
         </div>
-        <div class="toggle-item" data-id="done">
-          <p class="toggle-done">0</p>
-          <span>done</span>
+        <div class="btn btn-delete-all">
+          <span class="material-icons">delete</span>
         </div>
-        <div class="toggle-item" data-id="total">
-          <p class="toggle-total">0</p>
-          <span>total</span>
-        </div>
-      </div>
-      <div class="input-bar">
-        <input
-          class="text-input"
-          type="text"
-          placeholder="What needs to be done?"
-        />
-        <input class="date-selector" type="date" />
-        <span class="material-icons btn">add</span>
       </div>
     </div>
 
-    <div class="taskset-list"></div>
+    <!-- 添加模糊效果 -->
+    <div class="mask">
+      <div class="main">
+        <!-- 首页toggle -->
+        <div class="top-bar">
+          <div class="toggle">
+            <div class="toggle-item" data-id="left">
+              <p class="toggle-left">0</p>
+              <span> left</span>
+            </div>
+            <div class="toggle-item" data-id="done">
+              <p class="toggle-done">0</p>
+              <span>done</span>
+            </div>
+            <div class="toggle-item" data-id="total">
+              <p class="toggle-total">0</p>
+              <span>total</span>
+            </div>
+          </div>
+          <div class="input-bar">
+            <input
+              class="text-input"
+              type="text"
+              placeholder="What needs to be done?"
+            />
+            <input class="date-selector" type="date" />
+            <span class="material-icons btn">add</span>
+          </div>
+        </div>
 
-    <!-- function bar -->
-    <div class="function-bar">
-      <div class="btn delete-btn">
-        <span class="material-icons">delete </span
-        ><span class="text">dump all done</span>
-      </div>
-      <div class="btn hide-btn">
-        <span class="material-icons">expand_more</span>
+        <div class="taskset-list"></div>
+
+        <!-- function bar -->
+        <div class="function-bar">
+          <!-- <div class="btn delete-btn">
+            <span class="material-icons">delete </span
+            ><span class="text">dump all done</span>
+          </div> -->
+          <div class="btn hide-btn">
+            <span class="material-icons">expand_more</span>
+          </div>
+        </div>
+
+        <!-- todolist 和 完成的时间 -->
+        <div class="todo-container"></div>
       </div>
     </div>
-
-    <!-- todolist 和 完成的时间 -->
-    <div class="todo-container"></div>
   </body>
 </html>

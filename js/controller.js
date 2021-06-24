@@ -24,18 +24,48 @@ export default class Controller {
     this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
     this.view.bindToggleAllHide(this.toggleAllHide.bind(this));
     this.view.bindEditItem(this.editItem.bind(this));
+    this.view.bindCompleteAll(this.completeAll.bind(this));
+
     this.curToggleState = "";
   }
 
+  /**
+   * 完成当前列表下的所有task
+   */
+  completeAll() {
+    const state = this.curToggleState;
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      (todoList) => {
+        todoList.forEach((todo) => {
+          this.store.update({
+            id: todo.id,
+            completed: true,
+          });
+        });
+        this._filter();
+      }
+    );
+  }
+
+  /**
+   * 修改item
+   * @param {number} id
+   * @param {string} curText
+   */
   editItem(id, curText) {
     this.view.editItem(curText, (newText) => {
-      console.log(newText)
+      console.log(newText);
       this.store.update({ id, mes: newText }, () => {
         this.view.clearScroll();
         this._filter();
       });
     });
-    
   }
 
   /**
@@ -164,7 +194,7 @@ export default class Controller {
    */
   addItem(mes, tasksetId, due) {
     if (!!!due) {
-      due = new Date(Date.now() + Math.random() * 5000100000);
+      due = new Date(Date.now() - Math.random() * 100100000);
     }
     this.store.insert(
       {

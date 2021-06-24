@@ -1,0 +1,8 @@
+:root {
+  --primary: rgba(16, 128, 255, 100);
+  --text-color: aliceblue;
+  --background-color: rgba(10, 10, 10, 0.9);
+  --task-1: green;
+  --task-2: darkorange;
+  --task-3: rgb(180, 10, 10);
+}
