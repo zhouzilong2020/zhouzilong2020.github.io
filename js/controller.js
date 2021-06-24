@@ -42,13 +42,21 @@ export default class Controller {
         left: { completed: false },
       }[state],
       (todoList) => {
+        let len = todoList.length;
+        console.log("asdasdasdasd")
         todoList.forEach((todo) => {
-          this.store.update({
-            id: todo.id,
-            completed: true,
-          });
+          this.store.update(
+            {
+              id: todo.id,
+              completed: true,
+            },
+            () => {
+              if (--len === 0) {
+                this._filter();
+              }
+            }
+          );
         });
-        this._filter();
       }
     );
   }
@@ -73,7 +81,7 @@ export default class Controller {
    * @param {boolean} hide
    */
   toggleAllHide(hide) {
-    event.preventDefault()
+    event.preventDefault();
     this.view.changeHideBtn(hide);
     const state = this.curToggleState;
     this.store.find(

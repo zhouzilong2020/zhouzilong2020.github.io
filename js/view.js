@@ -214,7 +214,10 @@ export default class View {
   bindCompleteAll(handler) {
     $delegate(
       this.$floatGadget,
-      [".btn-complete-all", ".btn-complete-all span"],
+      [
+        ".float-gadget .btn-group .btn-complete-all",
+        ".float-gadget .btn-group .btn-complete-all span",
+      ],
       "click",
       ({ target }) => {
         handler();
@@ -304,7 +307,7 @@ export default class View {
 
     if (!this.$floatGadget.classList.contains("expand")) {
       this.setMask("2px");
-      this.$floatGadget.style.transition = "0.4s";
+      this.$floatGadget.style.transition = "0.3s";
       this.$floatGadget.style.top = "50%";
       this.$floatGadget.style.left = "50%";
       setTimeout(() => {
@@ -313,11 +316,12 @@ export default class View {
         setTimeout(() => {
           this.$floatGadget.style.transition = "0s";
         }, 200);
-      }, 400);
+      }, 300);
     } else {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
+    
   }
 
   /**
@@ -325,7 +329,7 @@ export default class View {
    * @param {function}} handler
    */
   bindToggleFloatGadget(handler) {
-    $on(this.$floatGadget, "click", handler, true);
+    $on(this.$floatGadget, "click", handler, false);
   }
 
   /**
