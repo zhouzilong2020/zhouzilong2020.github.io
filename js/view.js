@@ -137,17 +137,7 @@ export default class View {
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
 
-    this.bindMaskClick(() => {
-      if (this.$floatGadget.classList.contains("expand")) {
-        this.collapseFloatGadget.call(this);
-        this.setFloatPosition(
-          this.startX,
-          this.startY,
-          _screenH(event),
-          _screenW(event)
-        );
-      }
-    });
+    this.bindMaskClick(this.collapseFloatGadget.bind(this));
 
     this.enableFloatGadegt();
   }
@@ -155,15 +145,16 @@ export default class View {
   enableFloatGadegt() {
     $on(this.$floatGadget, "touchstart", () => {
       if (this.$floatGadget.classList.contains("expand")) {
-        //  展开后移除默认
+        //  展开后移除移动事件
         return;
       }
+      this.startX = _clientX(event);
+      this.startY = _clientY(event);
       this.$floatGadget.style.transition = "0s";
     });
-
     $on(this.$floatGadget, "touchmove", () => {
       if (this.$floatGadget.classList.contains("expand")) {
-        //  展开后移除默认
+        //  展开后移除移动事件
         return;
       }
       qs("body").style.overflow = "hidden";
@@ -173,8 +164,11 @@ export default class View {
       this.$floatGadget.style.left = _clientX(event) + offset + "px";
       this.$floatGadget.style.top = _clientY(event) + offset + "px";
     });
-
     $on(this.$floatGadget, "touchend", () => {
+      if (this.$floatGadget.classList.contains("expand")) {
+        //  展开后移除移动事件
+        return;
+      }
       qs("body").style.overflow = "";
       const offset = -30;
       this.setFloatPosition(
@@ -188,7 +182,6 @@ export default class View {
 
   setFloatPosition(curX, curY, screenH, screenW) {
     this.$floatGadget.style.transition = "0.4s";
-
     const offset = -30;
     const pos = {
       left: [0, curY],
@@ -196,10 +189,8 @@ export default class View {
       bottom: [curX, screenH + 2 * offset],
       right: [screenW + 2 * offset, curY],
     };
-
     const diffX = Math.min(curX, screenW - curX);
     const diffY = Math.min(curY, screenH - curY);
-
     if (diffX < diffY) {
       if (curX / screenW < 0.5) {
         this.setPos(this.$floatGadget, pos["left"]);
@@ -213,7 +204,6 @@ export default class View {
         this.setPos(this.$floatGadget, pos["top"]);
       }
     }
-
     setTimeout(() => {
       this.$floatGadget.style.transition = "0s";
     }, 400);
@@ -300,13 +290,17 @@ export default class View {
    * 折叠float gadget
    */
   collapseFloatGadget() {
+    const screenH = _screenH(event);
+    const screenW = _screenW(event);
+
     if (this.$floatGadget.classList.contains("expand")) {
       this.$floatGadget.style.transition = "0.2s";
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
       setTimeout(() => {
         this.$floatGadget.style.transition = "0";
-      }, 400);
+        this.setFloatPosition(this.startX, this.startY, screenH, screenW);
+      }, 200);
     }
   }
 
@@ -315,14 +309,11 @@ export default class View {
    */
   toggleFloatGadget() {
     const offset = -30;
-    this.startX = event.clientX + offset;
-    this.startY = event.clientY + offset;
     if (!this.$floatGadget.classList.contains("expand")) {
-      // 删掉移动监听
       this.setMask("2px");
-      this.$floatGadget.style.transition = "0.3s";
       this.$floatGadget.style.top = "50%";
       this.$floatGadget.style.left = "50%";
+      this.$floatGadget.style.transition = "0.3s";
       setTimeout(() => {
         this.$floatGadget.style.transition = "0.2s";
         this.$floatGadget.classList.add("expand");
@@ -331,7 +322,7 @@ export default class View {
         }, 200);
       }, 300);
     } else {
-      this.collapseFloatGadget();
+      this.collapseFloatGadget.call(this, event);
       this.setMask("0");
     }
   }
